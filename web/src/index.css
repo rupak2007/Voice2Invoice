@@ -71,6 +71,67 @@
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.32);
   --shadow-md: 0 12px 28px -10px rgb(0 0 0 / 0.55);
   --shadow-lg: 0 28px 64px -20px rgb(0 0 0 / 0.70);
+
+  /* THE glow — the live microphone only. */
+  --shadow-mic-live:
+    0 0 0 1px rgba(45, 212, 191, 0.26),
+    0 0 0 8px rgba(45, 212, 191, 0.06),
+    0 0 44px -6px rgba(45, 212, 191, 0.45);
+}
+
+/* ---------------------------------------------------------------------------
+   Light theme — <html data-theme="light">. Same token names, so every
+   utility (bg-surface, text-ink, border-line …) follows automatically.
+   Built on the print sheet (#fff page, #111 text, #ddd rules); accents and
+   status colours are darkened so all text clears 4.5:1 on every surface.
+--------------------------------------------------------------------------- */
+[data-theme="light"] {
+  color-scheme: light;
+
+  --color-base: #f4f6f6;
+  --color-base-soft: #edf1f1;
+  --color-surface: #ffffff;
+  --color-raised: #f5f7f7;
+  --color-elevated: #ffffff;
+
+  --color-line: #dddddd;
+  --color-line-soft: #ebeeee;
+  --color-line-strong: #c4cccd;
+
+  --color-ink: #111111;    /* 18.9:1 on surface */
+  --color-dim: #44504f;    /* 8.4:1  */
+  --color-muted: #5b6769;  /* 5.9:1  */
+
+  --color-accent: #0f766e;       /* 5.5:1 on surface */
+  --color-accent-hover: #115e59;
+  --color-accent-press: #134e4a;
+  --color-accent-soft: rgba(15, 118, 110, 0.08);
+  --color-accent-line: rgba(15, 118, 110, 0.28);
+  --color-accent-ink: #ffffff;   /* on a solid accent fill, 5.5:1 */
+
+  --color-record: #be123c;
+  --color-record-soft: rgba(190, 18, 60, 0.08);
+  --color-record-line: rgba(190, 18, 60, 0.28);
+
+  --color-success: #047857;
+  --color-success-soft: rgba(4, 120, 87, 0.08);
+  --color-success-line: rgba(4, 120, 87, 0.28);
+
+  --color-warning: #92400e;
+  --color-warning-soft: rgba(146, 64, 14, 0.10);
+  --color-warning-line: rgba(146, 64, 14, 0.28);
+
+  --color-danger: #b91c1c;
+  --color-danger-soft: rgba(185, 28, 28, 0.08);
+  --color-danger-line: rgba(185, 28, 28, 0.28);
+
+  --shadow-sm: 0 1px 2px 0 rgb(16 24 24 / 0.08);
+  --shadow-md: 0 12px 28px -10px rgb(16 24 24 / 0.18);
+  --shadow-lg: 0 28px 64px -20px rgb(16 24 24 / 0.25);
+  --shadow-mic-live:
+    0 0 0 1px rgba(15, 118, 110, 0.28),
+    0 0 0 8px rgba(15, 118, 110, 0.06),
+    0 0 44px -6px rgba(15, 118, 110, 0.35);
 }
 
 @layer base {
@@ -78,6 +139,7 @@
     -webkit-text-size-adjust: 100%;
     color-scheme: dark;
   }
+  html[data-theme="light"] { color-scheme: light; }
 
   body {
     background-color: var(--color-base);
@@ -155,12 +217,7 @@
 }
 
 /* THE glow. The only one in the product, and only while listening. */
-.mic-live {
-  box-shadow:
-    0 0 0 1px var(--color-accent-line),
-    0 0 0 8px rgba(45, 212, 191, 0.06),
-    0 0 44px -6px rgba(45, 212, 191, 0.45);
-}
+.mic-live { box-shadow: var(--shadow-mic-live); }
 @keyframes v2i-breathe {
   0%, 100% { transform: scale(1);    opacity: 0.5 }
   50%      { transform: scale(1.06); opacity: 0.85 }

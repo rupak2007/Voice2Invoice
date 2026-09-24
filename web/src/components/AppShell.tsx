@@ -1,13 +1,14 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import {
-  Bell, BarChart3, Boxes, FileText, LayoutGrid, Loader2, Menu, Mic, Plug,
-  Receipt, Search, Settings as SettingsIcon, Users, X,
+  Bell, BarChart3, Boxes, FileText, LayoutGrid, Loader2, Menu, Mic, Moon, Plug,
+  Receipt, Search, Settings as SettingsIcon, Sun, Users, X,
 } from 'lucide-react';
 import { useActiveJobs } from '../lib/activeJobs';
 import { useApi } from '../lib/useApi';
 import type { DraftSummary, Settings, Stats } from '../lib/types';
-import { buttonStyles } from './Button';
+import { buttonStyles, IconButton } from './Button';
+import { useTheme } from '../lib/theme';
 
 interface NavEntry {
   to: string;
@@ -146,6 +147,7 @@ function Nav({ groups, onNavigate }: { groups: NavGroup[]; onNavigate?: () => vo
 
 function AccountRow({ businessName }: { businessName: string }) {
   const { running, online } = useActiveJobs();
+  const { theme, toggle } = useTheme();
   return (
     <div className="border-t border-line-soft p-3">
       <div className="flex items-center gap-2.5 rounded-lg px-1 py-1">
@@ -172,6 +174,12 @@ function AccountRow({ businessName }: { businessName: string }) {
             )}
           </p>
         </div>
+        <IconButton
+          label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
+          onClick={toggle}
+        >
+          {theme === 'dark' ? <Sun size={15} aria-hidden /> : <Moon size={15} aria-hidden />}
+        </IconButton>
       </div>
     </div>
   );

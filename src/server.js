@@ -2,12 +2,34 @@ import express from 'express';
 import { existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
-import { config, requireEnv } from './config.js';
+import { config } from './config.js';
 import { isValidTwilioRequest, sendWhatsApp } from './twilio.js';
 import { processVoiceNote, processTextNote } from './pipeline.js';
 import { createApiRouter } from './api.js';
 
-for (const k of ['TWILIO_ACCOUNT_SID', 'TWILIO_AUTH_TOKEN', 'TWILIO_WHATSAPP_NUMBER', 'AI_API_KEY', 'STRIPE_SECRET_KEY']) requireEnv(k);
+// Credentials are reported at boot but no longer block it. Each subsystem still
+// calls requireEnv() at the point of use, so a missing key fails loudly on the
+// feature that needs it — while the rest of the app (the dashboard, the job
+// history, the review workspace) stays usable. Refusing to start meant someone
+// cloning the repo hit a wall before seeing anything.
+const CREDENTIALS = [
+  ['TWILIO_ACCOUNT_SID', 'WhatsApp intake'],
+  ['TWILIO_AUTH_TOKEN', 'WhatsApp intake'],
+  ['TWILIO_WHATSAPP_NUMBER', 'WhatsApp replies'],
+  ['AI_API_KEY', 'transcription and extraction'],
+  ['STRIPE_SECRET_KEY', 'invoice creation'],
+];
+const missing = CREDENTIALS.filter(([k]) => !process.env[k]?.trim());
+if (missing.length) {
+  const affected = [...new Set(missing.map(([, feature]) => feature))].join(', ');
+  console.warn([
+    '',
+    `  Starting without: ${missing.map(([k]) => k).join(', ')}`,
+    `  These features will fail until those keys are set: ${affected}.`,
+    '  Everything else works. See Settings in the dashboard for live status.',
+    '',
+  ].join('\n'));
+}
 if (config.validateSignature && !config.webhookBaseUrl) {
   throw new Error('WEBHOOK_BASE_URL is required when VALIDATE_TWILIO_SIGNATURE=true');
 }

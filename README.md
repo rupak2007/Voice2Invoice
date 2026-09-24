@@ -2,6 +2,40 @@
 
 Speak the job, get an invoice. Voice2Invoice turns a spoken description of finished work into a structured job record, a **Stripe Test Mode** invoice, and an audit-log entry.
 
+## Try it in two minutes
+
+Needs [Node 20+](https://nodejs.org). No accounts, no keys, no credit card.
+
+```bash
+npm install
+npm run setup
+cp .env.example .env
+npm run seed:demo
+npm start
+```
+
+Open **http://localhost:3000**. The dashboard, jobs, invoices, review workspace and the rest are
+populated with clearly-labelled demo records, so you can click through the whole product straight
+away. Remove them at any time with `npm run seed:demo -- --clear`.
+
+**To make the microphone actually work**, add one free key. Grab it at
+[console.groq.com/keys](https://console.groq.com/keys), put it in `.env`:
+
+```text
+AI_API_KEY=gsk_your_real_key_here
+```
+
+Restart, press **Start speaking**, and describe a job out loud — for example
+*"Finished the water heater job for Bob Vance. Used one 50 gallon unit and two fittings. Took two
+hours. Charge 250 dollars."* You'll watch it get transcribed, understood, and drafted into an
+invoice you review before anything is sent.
+
+Without that key the app still runs and every screen works on the demo data — only recording and
+transcription fail. Sending an invoice additionally needs a Stripe **test** key; the server refuses
+to start with a live one.
+
+---
+
 There are two ways in, and they share the same speech and extraction pipeline:
 
 ```text
