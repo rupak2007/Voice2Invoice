@@ -5,3 +5,6 @@ data/
 
 # Dashboard build output — regenerate with `npm run setup`
 web/dist/
+
+# Generated design-system exports — the tokens live in design-system/tokens.css
+Claude outputs/
