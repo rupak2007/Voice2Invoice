@@ -1,0 +1,29 @@
+{
+  "name": "voice2invoice",
+  "version": "1.0.0",
+  "description": "WhatsApp voice note -> transcript -> structured job JSON -> Stripe Test Mode invoice",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "node --test test/validate.test.js test/api.test.js test/money.test.js test/drafts.test.js",
+    "try": "node scripts/try-transcript.js",
+    "transcribe": "node scripts/transcribe-file.js",
+    "eval": "node scripts/eval-extraction.js",
+    "seed:demo": "node scripts/seed-demo.js",
+    "setup": "npm --prefix web install && npm --prefix web run build",
+    "dev:web": "npm --prefix web run dev",
+    "build:web": "npm --prefix web run build",
+    "install:web": "npm --prefix web install"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "openai": "^4.55.0",
+    "stripe": "^16.8.0",
+    "twilio": "^5.3.0"
+  }
+}

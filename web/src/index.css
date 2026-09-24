@@ -1,0 +1,222 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+   Voice2Invoice — design system
+
+   Identity: DARK · TEAL · VOICE · PRECISION · RESTRAINT
+
+   Rules this file enforces:
+   - Depth comes from four flat surface layers separated by hairlines. Never a
+     border and a heavy shadow on the same element.
+   - Teal is a signal, not a theme. It marks voice, AI activity, focus and the
+     single primary action on a screen. Nothing else.
+   - Exactly one element in the product is allowed to glow: the live microphone,
+     and only while it is actually listening.
+   - Motion is 120ms (micro) / 200ms (panel) / 320ms (state change). Only the
+     waveform, AI progress, state changes and focus animate.
+--------------------------------------------------------------------------- */
+@theme {
+  --font-sans: "Geist", "Inter Tight", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* Surface ladder — app → surface → raised → elevated */
+  --color-base: #090b0c;
+  --color-base-soft: #0d1011;
+  --color-surface: #121617;
+  --color-raised: #171c1d;
+  --color-elevated: #1d2425;
+
+  /* Hairlines do the structural work */
+  --color-line: #252c2e;
+  --color-line-soft: #1b2122;
+  --color-line-strong: #323b3d;
+
+  /* Text — measured on --color-surface, all pass WCAG AA */
+  --color-ink: #f3f7f7;    /* 15.9:1 */
+  --color-dim: #a8b3b5;    /* 8.7:1  */
+  --color-muted: #718083;  /* 4.5:1 — the quietest text allowed */
+
+  /* Teal. Voice, AI, focus, primary action. */
+  --color-accent: #2dd4bf;       /* 10.0:1 on surface */
+  --color-accent-hover: #14b8a6;
+  --color-accent-press: #0d9488;
+  --color-accent-soft: rgba(45, 212, 191, 0.10);
+  --color-accent-line: rgba(45, 212, 191, 0.26);
+  --color-accent-ink: #062b28;   /* text on a solid accent fill, 10.5:1 */
+
+  /* Recording — distinct from error */
+  --color-record: #fb7185;
+  --color-record-soft: rgba(251, 113, 133, 0.10);
+  --color-record-line: rgba(251, 113, 133, 0.28);
+
+  /* Semantics, muted for dark */
+  --color-success: #34d399;
+  --color-success-soft: rgba(52, 211, 153, 0.10);
+  --color-success-line: rgba(52, 211, 153, 0.26);
+
+  --color-warning: #fbbf24;
+  --color-warning-soft: rgba(251, 191, 36, 0.10);
+  --color-warning-line: rgba(251, 191, 36, 0.26);
+
+  --color-danger: #f87171;
+  --color-danger-soft: rgba(248, 113, 113, 0.10);
+  --color-danger-line: rgba(248, 113, 113, 0.26);
+
+  --radius-sm: 8px;
+  --radius-md: 10px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+
+  /* Shadows are for things that float above the page. Nothing else. */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.32);
+  --shadow-md: 0 12px 28px -10px rgb(0 0 0 / 0.55);
+  --shadow-lg: 0 28px 64px -20px rgb(0 0 0 / 0.70);
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    color-scheme: dark;
+  }
+
+  body {
+    background-color: var(--color-base);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection {
+    background: var(--color-accent-line);
+    color: var(--color-ink);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+
+  /* Money, timers, quantities and IDs never reflow as digits change. */
+  .tabular { font-variant-numeric: tabular-nums; }
+
+  /* Headlines: tight, confident, never oversized. */
+  .display {
+    letter-spacing: -0.028em;
+    line-height: 1.06;
+    font-weight: 600;
+  }
+
+  /* The one label style in the product. */
+  .eyebrow {
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+  input[type="number"] { -moz-appearance: textfield; }
+
+  /* Dark scrollbars, so the chrome does not flash white. */
+  * { scrollbar-color: var(--color-line-strong) transparent; scrollbar-width: thin; }
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-line-strong);
+    border: 3px solid transparent;
+    border-radius: 999px;
+    background-clip: content-box;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Motion
+-------------------------------------------------------------------------- */
+
+@keyframes v2i-pulse { 0%, 100% { opacity: 1 } 50% { opacity: 0.4 } }
+.skeleton {
+  animation: v2i-pulse 1.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  background-color: var(--color-raised);
+  border-radius: var(--radius-sm);
+}
+
+/* THE glow. The only one in the product, and only while listening. */
+.mic-live {
+  box-shadow:
+    0 0 0 1px var(--color-accent-line),
+    0 0 0 8px rgba(45, 212, 191, 0.06),
+    0 0 44px -6px rgba(45, 212, 191, 0.45);
+}
+@keyframes v2i-breathe {
+  0%, 100% { transform: scale(1);    opacity: 0.5 }
+  50%      { transform: scale(1.06); opacity: 0.85 }
+}
+.breathe { animation: v2i-breathe 3.2s cubic-bezier(0.4, 0, 0.5, 1) infinite; }
+
+@keyframes v2i-ring {
+  0%   { transform: scale(1);    opacity: 0.4 }
+  100% { transform: scale(1.55); opacity: 0 }
+}
+.ring { animation: v2i-ring 2.8s cubic-bezier(0.2, 0.6, 0.3, 1) infinite; }
+
+/* Idle brand waveform in the logo mark. */
+@keyframes v2i-wave { 0%, 100% { transform: scaleY(0.3) } 50% { transform: scaleY(1) } }
+.wave-bar { transform-origin: center; animation: v2i-wave 2.8s ease-in-out infinite; }
+
+/* AI is working: a travelling sheen along a hairline. */
+@keyframes v2i-scan { 0% { transform: translateX(-100%) } 100% { transform: translateX(340%) } }
+.scan { animation: v2i-scan 1.8s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
+
+/* Content arriving — transcript, extracted fields, toasts. */
+@keyframes v2i-rise { from { opacity: 0; transform: translateY(8px) } to { opacity: 1; transform: none } }
+.rise { animation: v2i-rise 320ms cubic-bezier(0.2, 0.8, 0.3, 1) both }
+
+@keyframes v2i-fade { from { opacity: 0 } to { opacity: 1 } }
+.fade { animation: v2i-fade 200ms ease-out both }
+
+@keyframes v2i-slide-up { from { opacity: 0; transform: translateY(12px) } to { opacity: 1; transform: none } }
+.slide-up { animation: v2i-slide-up 200ms cubic-bezier(0.2, 0.8, 0.3, 1) both }
+
+/* A field the AI just resolved. */
+@keyframes v2i-confirm {
+  0%   { background-color: var(--color-accent-soft) }
+  100% { background-color: transparent }
+}
+.confirm { animation: v2i-confirm 1.4s ease-out both }
+
+/* --------------------------------------------------------------------------
+   Print — the invoice prints as a light document, never as a dark app screen.
+-------------------------------------------------------------------------- */
+@media print {
+  @page { margin: 16mm }
+  html { color-scheme: light }
+  body { background: #fff; color: #111 }
+  .no-print { display: none !important }
+  .print-sheet {
+    border: 0 !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #fff !important;
+    color: #111 !important;
+  }
+  .print-sheet * { color: #111 !important; border-color: #ddd !important; background: transparent !important }
+  .print-root { padding: 0 !important }
+  a[href]::after { content: "" }
+}

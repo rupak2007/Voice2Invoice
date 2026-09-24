@@ -1,0 +1,7 @@
+node_modules/
+.env
+data/
+*.log
+
+# Dashboard build output — regenerate with `npm run setup`
+web/dist/
